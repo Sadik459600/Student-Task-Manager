@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - Student Task Manager</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <header class="navbar">
+
+        <div class="logo">
+            Student Task Manager
+        </div>
+
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="#" id="logoutBtn">Logout</a>
+        </nav>
+
+    </header>
+
+
+    <!-- Dashboard -->
+    <main class="dashboard-container">
+
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+
+            <h1>
+                Welcome, <span id="userName">Student</span>!
+            </h1>
+
+            <p>
+                Manage your tasks and stay organized.
+            </p>
+
+        </section>
+
+
+        <!-- Statistics -->
+        <section class="stats-container">
+
+            <div class="stat-card">
+
+                <h3>Total Tasks</h3>
+
+                <p id="totalTasks">
+                    0
+                </p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>Completed</h3>
+
+                <p id="completedTasks">
+                    0
+                </p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>Pending</h3>
+
+                <p id="pendingTasks">
+                    0
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- Add Task -->
+        <section class="task-form-section">
+
+            <h2>Add New Task</h2>
+
+            <form id="taskForm">
+
+                <div class="form-group">
+
+                    <label for="taskTitle">
+                        Task Title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="taskTitle"
+                        placeholder="Enter task title"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="taskDescription">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="taskDescription"
+                        placeholder="Enter task description"
+                    ></textarea>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="form-btn"
+                >
+                    Add Task
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- Task List -->
+        <section class="task-list-section">
+
+            
+<div class="task-list-header">
+    <h2>My Tasks</h2>
+
+    <input
+        type="text"
+        id="searchTask"
+        placeholder="Search tasks..."
+        aria-label="Search tasks"
+    >
+
+    <select id="taskFilter" aria-label="Filter tasks by status">
+        <option value="All">All Tasks</option>
+        <option value="Pending">Pending</option>
+        <option value="Completed">Completed</option>
+    </select>
+
+    <select id="priorityFilter" aria-label="Filter tasks by priority">
+        <option value="All">All Priorities</option>
+        <option value="High">High Priority</option>
+        <option value="Medium">Medium Priority</option>
+        <option value="Low">Low Priority</option>
+    </select>
+</div>
+
+            <div id="taskList">
+
+                <p class="no-tasks">
+                    No tasks yet. Add your first task!
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            © 2026 Student Task Manager
+        </p>
+
+    </footer>
+
+
+    <script src="js/script.js"></script>
+
+</body>
+</html>
