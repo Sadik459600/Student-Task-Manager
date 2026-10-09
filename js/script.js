@@ -1,14 +1,41 @@
 
- // ========================================
- // STUDENT TASK MANAGER
- // Complete JavaScript
- // ========================================
+// ========================================
+// STUDENT TASK MANAGER
+// Complete JavaScript
+// ========================================
+
+// ---------- Toast Notifications ----------
+
+function showToast(message, type = "success") {
+    let toast = document.getElementById("appToast");
+
+    if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "appToast";
+        toast.className = "app-toast";
+        toast.setAttribute("role", "status");
+        toast.setAttribute("aria-live", "polite");
+        document.body.appendChild(toast);
+    }
+
+    toast.textContent = message;
+    toast.className = `app-toast ${type} show`;
+
+    if (toast.hideTimer) {
+        clearTimeout(toast.hideTimer);
+    }
+
+    toast.hideTimer = setTimeout(() => {
+        toast.classList.remove("show");
+    }, 2800);
+}
 
 // ---------- Local Storage Helpers ----------
 
 function getUsers() {
     try {
-        return JSON.parse(localStorage.getItem("users")) || [];
+        const users = JSON.parse(localStorage.getItem("users"));
+        return Array.isArray(users) ? users : [];
     } catch (error) {
         console.error("Could not read users:", error);
         return [];
@@ -17,7 +44,8 @@ function getUsers() {
 
 function getTasks() {
     try {
-        return JSON.parse(localStorage.getItem("tasks")) || [];
+        const tasks = JSON.parse(localStorage.getItem("tasks"));
+        return Array.isArray(tasks) ? tasks : [];
     } catch (error) {
         console.error("Could not read tasks:", error);
         return [];
@@ -34,7 +62,31 @@ function getCurrentUser() {
 }
 
 function saveTasks(tasks) {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+    try {
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        return true;
+    } catch (error) {
+        console.error("Could not save tasks:", error);
+        showToast("Could not save tasks. Check browser storage.", "error");
+        return false;
+    }
+}
+
+// ---------- Date Validation ----------
+
+function isValidDate(dateString) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+        return false;
+    }
+
+    const date = new Date(dateString + "T00:00:00");
+
+    return (
+        !Number.isNaN(date.getTime()) &&
+        date.getFullYear() === Number(dateString.slice(0, 4)) &&
+        date.getMonth() + 1 === Number(dateString.slice(5, 7)) &&
+        date.getDate() === Number(dateString.slice(8, 10))
+    );
 }
 
 // ---------- Registration ----------
@@ -51,8 +103,12 @@ if (registerForm) {
         const confirmPasswordInput =
             document.getElementById("confirmPassword");
 
-        if (!nameInput || !emailInput || !passwordInput ||
-            !confirmPasswordInput) {
+        if (
+            !nameInput ||
+            !emailInput ||
+            !passwordInput ||
+            !confirmPasswordInput
+        ) {
             alert("Registration fields are missing. Check register.html.");
             return;
         }
@@ -85,9 +141,9 @@ if (registerForm) {
 
         users.push({
             id: Date.now(),
-            name: name,
-            email: email,
-            password: password
+            name,
+            email,
+            password
         });
 
         localStorage.setItem("users", JSON.stringify(users));
@@ -197,16 +253,19 @@ if (taskForm && currentUser) {
         const newTask = {
             id: Date.now(),
             userEmail: currentUser.email,
-            title: title,
-            description: description,
+            title,
+            description,
             priority: priority || "Medium",
-            dueDate: dueDate,
+            dueDate,
             completed: false,
             createdAt: new Date().toISOString()
         };
 
         tasks.push(newTask);
-        saveTasks(tasks);
+
+        if (!saveTasks(tasks)) {
+            return;
+        }
 
         taskForm.reset();
 
@@ -215,7 +274,7 @@ if (taskForm && currentUser) {
         }
 
         displayTasks();
-        alert("Task added successfully!");
+        showToast("Task added successfully!");
     });
 }
 
@@ -253,8 +312,10 @@ function displayTasks() {
         const title = (task.title || "").toLowerCase();
         const description = (task.description || "").toLowerCase();
 
-        return title.includes(searchText) ||
-            description.includes(searchText);
+        return (
+            title.includes(searchText) ||
+            description.includes(searchText)
+        );
     });
 
     if (selectedFilter === "Pending") {
@@ -314,8 +375,13 @@ function displayTasks() {
         description.textContent =
             task.description || "No description provided.";
 
+        // Priority
         const priority = document.createElement("p");
-        priority.className = "task-priority";
+        const priorityLevel = (
+            task.priority || "Medium"
+        ).toLowerCase();
+
+        priority.className = "task-priority " + priorityLevel;
         priority.textContent =
             "Priority: " + (task.priority || "Medium");
 
@@ -325,6 +391,8 @@ function displayTasks() {
 
         if (!task.dueDate) {
             dueDateElement.textContent = "Due Date: Not set";
+        } else if (!isValidDate(task.dueDate)) {
+            dueDateElement.textContent = "Due Date: Invalid date";
         } else {
             const today = new Date();
 
@@ -333,7 +401,16 @@ function displayTasks() {
                 String(today.getMonth() + 1).padStart(2, "0") + "-" +
                 String(today.getDate()).padStart(2, "0");
 
-            dueDateElement.textContent = "Due Date: " + task.dueDate;
+            const formattedDueDate = new Date(
+                task.dueDate + "T00:00:00"
+            ).toLocaleDateString("en-IN", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+            });
+
+            dueDateElement.textContent =
+                "Due Date: " + formattedDueDate;
 
             if (task.completed) {
                 dueDateElement.classList.add("due-completed");
@@ -431,6 +508,35 @@ function updateStatistics(tasks) {
     if (pendingElement) {
         pendingElement.textContent = pendingCount;
     }
+
+    const percentage = tasks.length === 0
+        ? 0
+        : Math.round((completedCount / tasks.length) * 100);
+
+    const progressPercentage = document.getElementById(
+        "progressPercentage"
+    );
+    const progressFill = document.getElementById("taskProgressFill");
+    const progressBar = document.getElementById("taskProgressBar");
+    const progressCaption = document.getElementById("progressCaption");
+
+    if (progressPercentage) {
+        progressPercentage.textContent = `${percentage}%`;
+    }
+
+    if (progressFill) {
+        progressFill.style.width = `${percentage}%`;
+    }
+
+    if (progressBar) {
+        progressBar.setAttribute("aria-valuenow", percentage);
+    }
+
+    if (progressCaption) {
+        progressCaption.textContent = tasks.length === 0
+            ? "Add your first task to start your progress."
+            : `${completedCount} of ${tasks.length} tasks completed`;
+    }
 }
 
 // ---------- Complete / Undo Task ----------
@@ -449,14 +555,23 @@ function completeTask(taskId) {
     );
 
     if (!task) {
-        alert("Task not found.");
+        showToast("Task not found.", "error");
         return;
     }
 
     task.completed = !task.completed;
 
-    saveTasks(tasks);
+    if (!saveTasks(tasks)) {
+        return;
+    }
+
     displayTasks();
+
+    showToast(
+        task.completed
+            ? "Task completed successfully!"
+            : "Task marked as pending."
+    );
 }
 
 // ---------- Edit Task ----------
@@ -475,7 +590,7 @@ function editTask(taskId) {
     );
 
     if (!task) {
-        alert("Task not found.");
+        showToast("Task not found.", "error");
         return;
     }
 
@@ -545,33 +660,19 @@ function editTask(taskId) {
     task.priority = priorityMap[normalizedPriority];
     task.dueDate = dueDate;
 
-    saveTasks(tasks);
-    displayTasks();
-
-    alert("Task updated successfully!");
-}
-
-// ---------- Validate Date ----------
-
-function isValidDate(dateString) {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-        return false;
+    if (!saveTasks(tasks)) {
+        return;
     }
 
-    const date = new Date(dateString + "T00:00:00");
-
-    return (
-        !Number.isNaN(date.getTime()) &&
-        date.getFullYear() === Number(dateString.slice(0, 4)) &&
-        date.getMonth() + 1 === Number(dateString.slice(5, 7)) &&
-        date.getDate() === Number(dateString.slice(8, 10))
-    );
+    displayTasks();
+    showToast("Task updated successfully!");
 }
 
 // ---------- Delete Task ----------
 
 function deleteTask(taskId) {
     if (!currentUser) {
+        showToast("Please log in first.", "error");
         return;
     }
 
@@ -593,52 +694,37 @@ function deleteTask(taskId) {
     );
 
     if (updatedTasks.length === tasks.length) {
-        alert("Task not found or could not be deleted.");
+        showToast("Task not found or could not be deleted.", "error");
         return;
     }
 
-    saveTasks(updatedTasks);
+    if (!saveTasks(updatedTasks)) {
+        return;
+    }
+
     displayTasks();
+    showToast("Task deleted successfully!");
 }
 
-// ---------- Search Tasks ----------
+// ---------- Search and Filters ----------
 
-const searchTask = document.getElementById("searchTask");
+const searchTaskElement = document.getElementById("searchTask");
+const taskFilterElement = document.getElementById("taskFilter");
+const priorityFilterElement = document.getElementById("priorityFilter");
 
-if (searchTask) {
-    searchTask.addEventListener("input", displayTasks);
+if (searchTaskElement) {
+    searchTaskElement.addEventListener("input", displayTasks);
 }
 
-// ---------- Status Filter ----------
-
-const taskFilter = document.getElementById("taskFilter");
-
-if (taskFilter) {
-    taskFilter.addEventListener("change", displayTasks);
+if (taskFilterElement) {
+    taskFilterElement.addEventListener("change", displayTasks);
 }
 
-// ---------- Priority Filter ----------
-
-const priorityFilter = document.getElementById("priorityFilter");
-
-if (priorityFilter) {
-    priorityFilter.addEventListener("change", displayTasks);
+if (priorityFilterElement) {
+    priorityFilterElement.addEventListener("change", displayTasks);
 }
 
-// ---------- Logout ----------
-
-const logoutBtn = document.getElementById("logoutBtn");
-
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", function (event) {
-        event.preventDefault();
-
-        localStorage.removeItem("currentUser");
-        window.location.href = "login.html";
-    });
-}
-
-// ---------- Initial Display ----------
+// ---------- Initial Dashboard Render ----------
 
 if (taskList && currentUser) {
     displayTasks();

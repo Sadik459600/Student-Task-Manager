@@ -1,184 +1,339 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1020">
 
-    <title>Dashboard - Student Task Manager</title>
+    <title>Dashboard | Student Task Manager</title>
 
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
+<body class="dashboard-page">
 
-    <!-- Navbar -->
-    <header class="navbar">
+    <div class="app-layout">
 
-        <div class="logo">
-            Student Task Manager
-        </div>
+        <!-- Sidebar -->
+        <aside class="app-sidebar">
 
-        <nav>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="#" id="logoutBtn">Logout</a>
-        </nav>
+            <a href="dashboard.html" class="brand">
+                <span class="brand-icon">S</span>
+                <span class="brand-name">
+                    Student<span>Flow</span>
+                    <small>TASK MANAGER</small>
+                </span>
+            </a>
 
-    </header>
+            <div class="sidebar-label">WORKSPACE</div>
 
+            <nav class="sidebar-nav" aria-label="Main navigation">
+                <a href="dashboard.html" class="sidebar-link active">
+                    <span class="nav-icon">▦</span>
+                    Dashboard
+                </a>
 
-    <!-- Dashboard -->
-    <main class="dashboard-container">
+                <a href="#taskListSection" class="sidebar-link">
+                    <span class="nav-icon">☷</span>
+                    My Tasks
+                </a>
 
-        <!-- Welcome Section -->
-        <section class="welcome-section">
+                <a href="#addTaskSection" class="sidebar-link">
+                    <span class="nav-icon">＋</span>
+                    Add New Task
+                </a>
+            </nav>
 
-            <h1>
-                Welcome, <span id="userName">Student</span>!
-            </h1>
-
-            <p>
-                Manage your tasks and stay organized.
-            </p>
-
-        </section>
-
-
-        <!-- Statistics -->
-        <section class="stats-container">
-
-            <div class="stat-card">
-
-                <h3>Total Tasks</h3>
-
-                <p id="totalTasks">
-                    0
-                </p>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <h3>Completed</h3>
-
-                <p id="completedTasks">
-                    0
-                </p>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <h3>Pending</h3>
-
-                <p id="pendingTasks">
-                    0
-                </p>
-
-            </div>
-
-        </section>
-
-
-        <!-- Add Task -->
-        <section class="task-form-section">
-
-            <h2>Add New Task</h2>
-
-            <form id="taskForm">
-
-                <div class="form-group">
-
-                    <label for="taskTitle">
-                        Task Title
-                    </label>
-
-                    <input
-                        type="text"
-                        id="taskTitle"
-                        placeholder="Enter task title"
-                        required
-                    >
-
+            <div class="sidebar-bottom">
+                <div class="sidebar-tip">
+                    <span class="tip-icon">✦</span>
+                    <h3>Stay focused.</h3>
+                    <p>Small steps every day lead to big achievements.</p>
                 </div>
 
+                <div class="sidebar-profile">
+                    <div class="profile-avatar">S</div>
+                    <div class="profile-info">
+                        <strong>Student Workspace</strong>
+                        <span>Personal dashboard</span>
+                    </div>
+                </div>
+            </div>
 
-                <div class="form-group">
+        </aside>
 
-                    <label for="taskDescription">
-                        Description
-                    </label>
+        <!-- Main Application -->
+        <div class="app-main">
 
-                    <textarea
-                        id="taskDescription"
-                        placeholder="Enter task description"
-                    ></textarea>
-
+            <!-- Topbar -->
+            <header class="app-topbar">
+                <div class="topbar-heading">
+                    <span class="topbar-eyebrow">WORKSPACE / OVERVIEW</span>
+                    <h2>Dashboard</h2>
                 </div>
 
+                <div class="topbar-actions">
+                    <span class="workspace-status">
+                        <span class="status-dot"></span>
+                        My Workspace
+                    </span>
 
-                <button
-                    type="submit"
-                    class="form-btn"
+                    <a href="#" id="logoutBtn" class="logout-btn">
+                        <span aria-hidden="true">↗</span>
+                        Logout
+                    </a>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <main class="dashboard-container">
+
+                <!-- Welcome Section -->
+                <section class="welcome-section dashboard-welcome">
+                    <div>
+                        <span class="section-eyebrow">
+                            YOUR PRODUCTIVITY SPACE
+                        </span>
+
+                        <h1>
+                            Welcome back,
+                            <span id="userName">Student</span>!
+                            <span class="welcome-sparkle">✦</span>
+                        </h1>
+
+                        <p>
+                            Keep your goals clear, organize your work,
+                            and make today productive.
+                        </p>
+                    </div>
+
+                    <a href="#addTaskSection" class="quick-add-btn">
+                        <span aria-hidden="true">＋</span>
+                        Add New Task
+                    </a>
+                </section>
+
+                <!-- Statistics -->
+                <section
+                    class="stats-container dashboard-stats"
+                    aria-label="Task statistics"
                 >
-                    Add Task
-                </button>
 
-            </form>
+                    <article class="stat-card stat-total">
+                        <div class="stat-card-top">
+                            <span class="stat-label">TOTAL TASKS</span>
+                            <span class="stat-icon">▤</span>
+                        </div>
 
-        </section>
+                        <p id="totalTasks">0</p>
+                        <span class="stat-caption">All your tasks</span>
+                        <div class="stat-decoration"></div>
+                    </article>
 
+                    <article class="stat-card stat-completed">
+                        <div class="stat-card-top">
+                            <span class="stat-label">COMPLETED</span>
+                            <span class="stat-icon">✓</span>
+                        </div>
 
-        <!-- Task List -->
-        <section class="task-list-section">
+                        <p id="completedTasks">0</p>
+                        <span class="stat-caption">Tasks finished</span>
+                        <div class="stat-decoration"></div>
+                    </article>
 
-            
-<div class="task-list-header">
-    <h2>My Tasks</h2>
+                    <article class="stat-card stat-pending">
+                        <div class="stat-card-top">
+                            <span class="stat-label">PENDING</span>
+                            <span class="stat-icon">◷</span>
+                        </div>
 
-    <input
-        type="text"
-        id="searchTask"
-        placeholder="Search tasks..."
-        aria-label="Search tasks"
-    >
+                        <p id="pendingTasks">0</p>
+                        <span class="stat-caption">Still in progress</span>
+                        <div class="stat-decoration"></div>
+                    </article>
 
-    <select id="taskFilter" aria-label="Filter tasks by status">
-        <option value="All">All Tasks</option>
-        <option value="Pending">Pending</option>
-        <option value="Completed">Completed</option>
-    </select>
+                </section>
 
-    <select id="priorityFilter" aria-label="Filter tasks by priority">
-        <option value="All">All Priorities</option>
-        <option value="High">High Priority</option>
-        <option value="Medium">Medium Priority</option>
-        <option value="Low">Low Priority</option>
+                <!-- Task Completion Progress -->
+                <section
+                    class="progress-section"
+                    aria-labelledby="progressHeading"
+                >
+                    <div class="progress-header">
+                        <div>
+                            <p class="section-eyebrow">YOUR PROGRESS</p>
+
+                            <h2 id="progressHeading">Task Completion</h2>
+
+                            <p>
+                                Keep going! Every completed task counts.
+                            </p>
+                        </div>
+
+                        <div class="progress-percentage">
+                            <span id="progressPercentage">0%</span>
+                        </div>
+                    </div>
+
+                    <div
+                        class="progress-track"
+                        id="taskProgressBar"
+                        role="progressbar"
+                        aria-label="Task completion progress"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        aria-valuenow="0"
+                    >
+                        <div
+                            class="progress-fill"
+                            id="taskProgressFill"
+                        ></div>
+                    </div>
+
+                    <p class="progress-caption" id="progressCaption">
+                        Add your first task to start your progress.
+                    </p>
+                </section>
+
+                <!-- Add Task -->
+                <section
+                    class="task-form-section dashboard-panel"
+                    id="addTaskSection"
+                >
+
+                    <div class="panel-heading">
+                        <div>
+                            <span class="section-eyebrow">GET THINGS DONE</span>
+                            <h2>Create a New Task</h2>
+
+                            <p class="panel-description">
+                                Add a task and keep your work organized.
+                            </p>
+                        </div>
+
+                        <span class="panel-heading-icon">＋</span>
+                    </div>
+
+                    <form id="taskForm">
+
+                        <div class="form-group">
+                            <label for="taskTitle">Task Title</label>
+
+                            <input
+                                type="text"
+                                id="taskTitle"
+                                placeholder="e.g. Complete DSA practice"
+                                required
+                            >
+                        </div>
+```html
+<div class="form-group">
+    <label for="taskPriority">Priority</label>
+    <select id="taskPriority" name="priority">
+        <option value="Low">Low</option>
+        <option value="Medium" selected>Medium</option>
+        <option value="High">High</option>
     </select>
 </div>
 
-            <div id="taskList">
+<div class="form-group">
+    <label for="taskDueDate">Due Date</label>
+    <input
+        type="date"
+        id="taskDueDate"
+        name="dueDate"
+    >
+</div>
+```
+                        <div class="form-group">
+                            <label for="taskDescription">
+                                Description
+                                <span class="optional-label">OPTIONAL</span>
+                            </label>
 
-                <p class="no-tasks">
-                    No tasks yet. Add your first task!
-                </p>
+                            <textarea
+                                id="taskDescription"
+                                placeholder="What do you need to accomplish?"
+                            ></textarea>
+                        </div>
 
-            </div>
+                        <button type="submit" class="form-btn">
+                            <span aria-hidden="true">＋</span>
+                            Add Task
+                        </button>
 
-        </section>
+                    </form>
+                </section>
 
-    </main>
+                <!-- Task List -->
+                <section
+                    class="task-list-section dashboard-panel"
+                    id="taskListSection"
+                >
 
+                    <div class="task-list-header dashboard-task-header">
 
-    <footer>
+                        <div class="task-heading-copy">
+                            <span class="section-eyebrow">YOUR WORK</span>
+                            <h2>My Tasks</h2>
 
-        <p>
-            © 2026 Student Task Manager
-        </p>
+                            <p class="panel-description">
+                                Review and manage your tasks.
+                            </p>
+                        </div>
 
-    </footer>
+                        <div class="task-filters">
 
+                            <input
+                                type="search"
+                                id="searchTask"
+                                placeholder="⌕ Search tasks..."
+                                aria-label="Search tasks"
+                            >
+
+                            <select
+                                id="taskFilter"
+                                aria-label="Filter tasks by status"
+                            >
+                                <option value="All">All Tasks</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+
+                            <select
+                                id="priorityFilter"
+                                aria-label="Filter tasks by priority"
+                            >
+                                <option value="All">All Priorities</option>
+                                <option value="High">High Priority</option>
+                                <option value="Medium">Medium Priority</option>
+                                <option value="Low">Low Priority</option>
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <div id="taskList">
+                        <p class="no-tasks">
+                            No tasks yet. Add your first task!
+                        </p>
+                    </div>
+
+                </section>
+
+                <!-- Footer -->
+                <footer class="dashboard-footer">
+                    <span>© 2026 Student Task Manager</span>
+                    <span>
+                        Built for better productivity
+                        <span class="footer-heart">♥</span>
+                    </span>
+                </footer>
+
+            </main>
+        </div>
+    </div>
 
     <script src="js/script.js"></script>
 
