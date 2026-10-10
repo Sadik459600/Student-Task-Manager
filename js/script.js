@@ -199,6 +199,24 @@ if (taskList && !currentUser) {
     window.location.href = "login.html";
 }
 
+const logoutButton = document.getElementById("logoutBtn");
+
+if (logoutButton) {
+    logoutButton.addEventListener("click", function (event) {
+        event.preventDefault();
+
+        const confirmed = confirm("Are you sure you want to logout?");
+
+        if (!confirmed) {
+            return;
+        }
+
+        localStorage.removeItem("currentUser");
+        window.location.replace("login.html");
+    });
+}
+
+
 // ---------- Show Logged-in User ----------
 
 const userNameElement = document.getElementById("userName");
